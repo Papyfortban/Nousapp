@@ -1,29 +1,118 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Esteban ❤️ Anastasia</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Esteban & Anastasia 💕</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #ffe6f0;
+        color: #333;
+        text-align: center;
+        padding: 20px;
+    }
+    h1 {
+        color: #d63384;
+    }
+    input, button {
+        padding: 10px;
+        margin: 5px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+    button {
+        background: #d63384;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #b52d6f;
+    }
+    #messages {
+        margin-top: 20px;
+        text-align: left;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+    }
+    .message {
+        padding: 8px;
+        border-bottom: 1px solid #eee;
+    }
+</style>
 </head>
 <body>
-    <header>
-        <h1>💌 Esteban & Anastasia 💌</h1>
-        <p>Depuis juillet 2024</p>
-    </header>
 
-    <main>
-        <section class="jour">
-            <h2 id="dateDuJour"></h2>
-            <textarea id="journal" placeholder="Écris ton petit mot ici..."></textarea>
-            <button onclick="sauverMessage()">💾 Sauvegarder</button>
-        </section>
-        <section class="messages">
-            <h2>Nos souvenirs</h2>
-            <ul id="listeMessages"></ul>
-        </section>
-    </main>
+<h1>Esteban & Anastasia 💖</h1>
+<p>Notre journal depuis Juillet 2024 📅</p>
 
-    <script src="script.js"></script>
+<input type="text" id="pseudo" placeholder="Ton prénom">
+<input type="text" id="message" placeholder="Écris un message...">
+<button onclick="sendMessage()">Envoyer</button>
+
+<div id="messages"></div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+
+<script>
+    // 🔹 Mets ici ta config Firebase :
+   // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCwuGD7NybKwm6AWOuHTmt_td8YcH6iGUw",
+  authDomain: "nousapp-7fcb3.firebaseapp.com",
+  projectId: "nousapp-7fcb3",
+  storageBucket: "nousapp-7fcb3.firebasestorage.app",
+  messagingSenderId: "206162969687",
+  appId: "1:206162969687:web:99d26ce01063a6c0ca4f12",
+  measurementId: "G-NGXLV0JNSW"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    function sendMessage() {
+        let pseudo = document.getElementById("pseudo").value;
+        let message = document.getElementById("message").value;
+        if (pseudo && message) {
+            db.collection("messages").add({
+                pseudo: pseudo,
+                message: message,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            document.getElementById("message").value = "";
+        }
+    }
+
+    db.collection("messages").orderBy("timestamp").onSnapshot(snapshot => {
+        let html = "";
+        snapshot.forEach(doc => {
+            let data = doc.data();
+            html += `<div class="message"><b>${data.pseudo} :</b> ${data.message}</div>`;
+        });
+        document.getElementById("messages").innerHTML = html;
+    });
+</script>
+
 </body>
 </html>
+
