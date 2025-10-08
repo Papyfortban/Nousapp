@@ -1,87 +1,111 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Chat</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>450 phrases mignonnes pour Anastasia</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f0f0;
-      padding: 20px;
-    }
-    #chat {
-      background: white;
-      padding: 10px;
-      height: 300px;
-      overflow-y: auto;
-      border: 1px solid #ccc;
-      margin-bottom: 10px;
-    }
-    input {
-      padding: 8px;
-      width: 70%;
-    }
-    button {
-      padding: 8px;
-    }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; line-height: 1.6; margin: 24px; }
+    h1 { font-size: 1.6rem; margin-bottom: 0.25rem; }
+    p { margin-top: 0; color: #444; }
+    .actions { margin: 12px 0 20px; display: flex; gap: 8px; flex-wrap: wrap; }
+    button { cursor: pointer; border: 1px solid #ccc; background: #f7f7f7; border-radius: 8px; padding: 8px 12px; }
+    ol { padding-left: 1.2rem; }
+    li { margin: 4px 0; }
+    small { color: #666; }
   </style>
 </head>
 <body>
-  <h1>Chat</h1>
-  <div id="chat"></div>
-  <input type="text" id="messageInput" placeholder="Tape ton message...">
-  <button onclick="sendMessage()">Envoyer</button>
+  <h1>450 phrases mignonnes pour Anastasia</h1>
+  <p><small>(Tout est généré directement en HTML/JS pour rester simple.)</small></p>
+  <div class="actions">
+    <button id="copyAll">Copier toutes les phrases</button>
+    <button id="downloadTxt">Télécharger en .txt</button>
+  </div>
+  <ol id="phrases"></ol>  <script>
+    // Listes de base (courtes et simples) pour créer 450 phrases variées
+    const intros = [
+      "Anastasia", "Ma Anastasia", "Ma chérie Anastasia", "Mon amour", "Ma douceur",
+      "Mon étoile", "Mon trésor", "Mon soleil", "Ma reine", "Mon cœur",
+      "Mon petit bonheur", "Mon miracle", "Ma muse", "Ma jolie", "Ma perle rare",
+      "Mon ange", "Ma lionne", "Ma princesse", "Mon colibri", "Mon rayon de soleil",
+      "Mon océan de paix", "Ma magie", "Mon univers", "Mon havre", "Ma confidente",
+      "Mon aventure", "Ma moitié", "Mon énergie", "Ma championne", "Ma merveille"
+    ];
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    const middles = [
+      "tu es", "tu restes", "tu seras toujours", "je te trouve", "je te vois",
+      "tu rends ma vie", "tu fais de moi", "tu illumines", "tu parfumes", "tu embellis",
+      "tu apaises", "tu réchauffes", "tu inspires", "tu complètes", "tu colories",
+      "tu transformes", "tu me boostes", "tu me guides", "tu me consoles", "tu m'émerveilles"
+    ];
 
-  <script>
-    // CONFIG FIREBASE (à remplacer par ta config)
-    const firebaseConfig = {
-      apiKey: "TA_CLE_API",
-      authDomain: "TON_PROJET.firebaseapp.com",
-      projectId: "TON_PROJET",
-      storageBucket: "TON_PROJET.appspot.com",
-      messagingSenderId: "TON_ID",
-      appId: "TON_APP_ID"
-    };
+    const qualities = [
+      "magique", "lumineuse", "incroyable", "unique", "si douce",
+      "si forte", "si brillante", "apaisante", "courageuse", "drôle",
+      "radieuse", "merveilleuse", "éblouissante", "précieuse", "charismatique",
+      "attentionnée", "étincelante", "géniale", "patiente", "créative",
+      "authentique", "gentille", "talentueuse", "exceptionnelle", "mon inspiration quotidienne",
+      "ma chance", "mon repère", "ma maison", "mon évidence", "mon sourire préféré",
+      "mon plus beau projet", "mon futur", "mon aujourd'hui", "un miracle", "un trésor",
+      "un poème", "une mélodie", "un soleil", "un refuge", "une caresse",
+      "une étincelle", "mon phare", "mon apaisement", "mon café du matin", "ma douceur du soir",
+      "ma victoire", "ma fierté", "ma joie simple", "mon étoile polaire", "mon souffle"
+    ];
 
-    // Initialisation
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    const closings = [
+      "Je t'aime.", "Merci d'être toi.", "Toujours à tes côtés.", "Je crois en toi.", "Tu comptes plus que tout.",
+      "Je suis fier de toi.", "Tu es ma personne.", "Jamais sans toi.", "Pour la vie.", "À jamais nous deux.",
+      "Chaque jour avec toi est un cadeau.", "Tu es mon meilleur choix.", "Reste près de moi.", "Tu m'apprends l'amour."
+    ];
 
-    const chatDiv = document.getElementById("chat");
-    const messageInput = document.getElementById("messageInput");
-
-    // Envoi d'un message
-    function sendMessage() {
-      const text = messageInput.value.trim();
-      if (text !== "") {
-        db.collection("messages").add({
-          text: text,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        messageInput.value = "";
+    // Génération déterministe jusqu'à 450 phrases uniques
+    const toutes = [];
+    outer: for (let i = 0; i < intros.length; i++) {
+      for (let j = 0; j < middles.length; j++) {
+        for (let k = 0; k < qualities.length; k++) {
+          // On varie la fermeture pour éviter la monotonie
+          const c = closings[(i + j + k) % closings.length];
+          const phrase = `${intros[i]}, ${middles[j]} ${qualities[k]}. ${c}`;
+          toutes.push(phrase);
+          if (toutes.length >= 450) break outer;
+        }
       }
     }
 
-    // Lecture en temps réel
-    db.collection("messages")
-      .orderBy("createdAt")
-      .onSnapshot(snapshot => {
-        chatDiv.innerHTML = "";
-        snapshot.forEach(doc => {
-          const msg = doc.data();
-          chatDiv.innerHTML += `<div>${msg.text}</div>`;
-        });
-        chatDiv.scrollTop = chatDiv.scrollHeight;
-      });
-  </script>
-</body>
+    const list = document.getElementById('phrases');
+    toutes.forEach((p) => {
+      const li = document.createElement('li');
+      li.textContent = p;
+      list.appendChild(li);
+    });
+
+    // Copier toutes les phrases
+    document.getElementById('copyAll').addEventListener('click', async () => {
+      const fullText = toutes.map((p, idx) => `${idx + 1}. ${p}`).join('\n');
+      try {
+        await navigator.clipboard.writeText(fullText);
+        alert('Copié !');
+      } catch (e) {
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = fullText;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        alert('Copié !');
+      }
+    });
+
+    // Télécharger en .txt
+    document.getElementById('downloadTxt').addEventListener('click', () => {
+      const blob = new Blob([toutes.map((p, i) => `${i + 1}. ${p}`).join('\n')], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = '450-phrases-mignonnes-Anastasia.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  </script></body>
 </html>
-
-
-</body>
-</html>
-
